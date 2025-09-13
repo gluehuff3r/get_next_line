@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: haabu-sa <haabu-sa@amman.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/09/13 03:34:48 by haabu-sa          #+#    #+#             */
-/*   Updated: 2025/09/13 03:34:48 by haabu-sa         ###   ########.fr       */
+/*   Created: 2025/09/11 15:19:25 by haabu-sa          #+#    #+#             */
+/*   Updated: 2025/09/13 21:31:00 by haabu-sa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 # define GET_NEXT_LINE_H
 
 #ifndef BUFFER_SIZE
-# define BUFFER_SIZE 42  
+# define BUFFER_SIZE 10
 #endif
 
 # include <fcntl.h>
@@ -27,4 +27,6 @@ char	*get_next_line(int fd);
 // char	*ft_substr(char *s, int start, int len);
 size_t		ft_strlen(const char *s);
 char	*ft_strdup(const char *s);
+char	*ft_strjoin(char const *s1, char const *s2);
+
 #endif
