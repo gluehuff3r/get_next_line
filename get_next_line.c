@@ -6,17 +6,20 @@
 /*   By: haabu-sa <haabu-sa@amman.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/11 15:19:41 by haabu-sa          #+#    #+#             */
-/*   Updated: 2025/09/13 21:34:47 by haabu-sa         ###   ########.fr       */
+/*   Updated: 2025/09/15 09:40:25 by haabu-sa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
- #include "get_next_line.h"
+#include "get_next_line.h"
 
 char	*trim(char *stash)
 {
-	char *newstash;
-	int i = 0;
+	char	*newstash;
+	int		i;
 
+	i = 0;
+	if (!stash)
+		return (NULL);
 	while (stash[i] && stash[i] != '\n')
 		i++;
 	if (!stash[i])
@@ -32,10 +35,11 @@ char	*trim(char *stash)
 
 char	*polish(char *stash)
 {
-	int i = 0;
-	char *newline;
+	int		i;
+	char	*newline;
 
-	if (!stash[0])
+	i = 0;
+	if (!stash)
 		return (NULL);
 	while (stash[i] && stash[i] != '\n')
 		i++;
@@ -53,51 +57,63 @@ char	*polish(char *stash)
 	newline[i] = '\0';
 	return (newline);
 }
-static char *read_into_stash(int fd, char *stash)
-{
-    char *buf = malloc(BUFFER_SIZE + 1);
-    char *tmp;
-    int r = 1;
 
-    if (!buf) return NULL;
-    while (!ft_strchr(stash, '\n') && r)
-    {
-        r = read(fd, buf, BUFFER_SIZE);
-        if (r > 0)
-        {
-            buf[r] = '\0';
-            tmp = ft_strjoin(stash, buf);
-            free(stash);
-            stash = tmp;
-        }
-    }
-    free(buf);
-    return stash;
+static char	*join_and_free(char *stash, char *buf)
+{
+	char	*tmp;
+
+	tmp = ft_strjoin(stash, buf);
+	free(stash);
+	return (tmp);
 }
 
-char *get_next_line(int fd)
+static char	*read_into_stash(int fd, char *stash)
 {
-    static char *stash;
-    char *line;
+	char	*buf;
+	int		bytes_read;
 
-    if (fd < 0 || BUFFER_SIZE <= 0)
-        return NULL;
-    if (!stash)
-        stash = ft_strdup("");
-    stash = read_into_stash(fd, stash);
-    if (!stash || !stash[0])
-    {
-        free(stash);
-        stash = NULL;
-        return NULL;
-    }
-    line = polish(stash);
-    stash = trim(stash);
-    return line;
+	buf = malloc(BUFFER_SIZE + 1);
+	if (!buf)
+		return (stash);
+	bytes_read = 1;
+	while (bytes_read >= 0 && !ft_strchr(stash, '\n'))
+	{
+		bytes_read = read(fd, buf, BUFFER_SIZE);
+		if (bytes_read <= 0)
+			break ;
+		buf[bytes_read] = '\0';
+		stash = join_and_free(stash, buf);
+	}
+	if (bytes_read < 0)
+	{
+		free(buf);
+		free(stash);
+		return (NULL);
+	}
+	free(buf);
+	return (stash);
 }
 
+char	*get_next_line(int fd)
+{
+	static char	*stash;
+	char		*line;
 
-#include <stdio.h>
+	if (fd < 0 || BUFFER_SIZE <= 0)
+		return (NULL);
+	if (!stash)
+		stash = ft_strdup("");
+	stash = read_into_stash(fd, stash);
+	if (!stash || !stash[0])
+	{
+		free(stash);
+		stash = NULL;
+		return (NULL);
+	}
+	line = polish(stash);
+	stash = trim(stash);
+	return (line);
+}
 
 // // 2️⃣ Override malloc temporarily
 // #define malloc(x) my_malloc(x)
@@ -121,30 +137,23 @@ char *get_next_line(int fd)
 //     return (0);
 // }
 
-#include "get_next_line.h"
-#include <fcntl.h>
-#include <stdio.h>
-#include <stdlib.h>
+// #include "get_next_line.h"
+// #include <fcntl.h>
+// #include <stdio.h>
+// #include <stdlib.h>
 
-int main(void)
-{
-    int fd = open("test.txt", O_RDONLY);
-    char *line;
-    int i = 1;
+// int	main(void)
+// {
+// 	int fd = open("test.txt", O_RDONLY);
+// 	char *line;
+// 	int i = 1;
+// 	while ((line = get_next_line(fd)))
+// 	{
+// 		printf("Line %d: %s", i, line);
+// 		free(line);
+// 		i++;
+// 	}
 
-    if (fd < 0)
-    {
-        perror("open");
-        return 1;
-    }
-
-    while ((line = get_next_line(fd)))
-    {
-        printf("Line %d: %s", i, line);
-        free(line);
-        i++;
-    }
-
-    close(fd);
-    return 0;
-}
+// 	close(fd);
+// 	return (0);
+// }
