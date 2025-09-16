@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line_utils.c                              :+:      :+:    :+:   */
+/*   get_next_line_utils_bonus.c                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: haabu-sa <haabu-sa@amman.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/09/15 08:00:26 by haabu-sa          #+#    #+#             */
-/*   Updated: 2025/09/16 14:22:54 by haabu-sa         ###   ########.fr       */
+/*   Created: 2025/09/16 18:13:22 by haabu-sa          #+#    #+#             */
+/*   Updated: 2025/09/16 18:13:31 by haabu-sa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 
 char	*stashfree(char *stash)
 {
